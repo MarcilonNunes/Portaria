@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Portaria - Login</title>
+
+<style>
+body {
+    margin:0;
+    height:100vh;
+    display:flex;
+    font-family:'Segoe UI';
+}
+
+.left {
+    flex:1;
+    background: linear-gradient(135deg,#22c55e,#16a34a);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    font-size:28px;
+    font-weight:bold;
+}
+
+.right {
+    flex:1;
+    background:#0f172a;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.card {
+    background:#020617;
+    padding:40px;
+    border-radius:10px;
+    width:300px;
+}
+
+input {
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    background:#0f172a;
+    border:none;
+    color:white;
+}
+
+button {
+    width:100%;
+    padding:10px;
+    background:#22c55e;
+    border:none;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="left">🏢 Portaria System</div>
+
+<div class="right">
+
+<div class="card">
+
+<h2>Login</h2>
+
+<input id="email" placeholder="Email">
+<input id="senha" type="password" placeholder="Senha">
+
+<button onclick="login()">Entrar</button>
+
+<p id="erro" style="color:red;"></p>
+
+</div>
+
+</div>
+
+<script>
+function login(){
+    if(document.getElementById("email").value === "admin" &&
+       document.getElementById("senha").value === "123"){
+        localStorage.setItem("logado", "true");
+        window.location.href = "dashboard.html";
+    } else {
+        document.getElementById("erro").innerText = "Login inválido";
+    }
+}
+</script>
+
+</body>
+</html>

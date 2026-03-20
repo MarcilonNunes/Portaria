@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portaria Pro</title>
+
+<style>
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Segoe UI', sans-serif;
+}
+
+body {
+    display:flex;
+    background:#0f172a;
+    color:white;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width:220px;
+    height:100vh;
+    background:#020617;
+    padding:20px;
+}
+
+.sidebar h2 {
+    color:#22c55e;
+    margin-bottom:20px;
+}
+
+.menu div {
+    padding:10px;
+    margin-bottom:10px;
+    cursor:pointer;
+    border-radius:6px;
+}
+
+.menu div:hover {
+    background:#0f172a;
+}
+
+/* MAIN */
+.main {
+    flex:1;
+    padding:20px;
+}
+
+/* HEADER */
+.header {
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.user {
+    background:#020617;
+    padding:10px;
+    border-radius:6px;
+}
+
+/* CARDS */
+.cards {
+    display:flex;
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.card {
+    flex:1;
+    background:#020617;
+    padding:20px;
+    border-radius:10px;
+    text-align:center;
+}
+
+/* FORM */
+.form {
+    background:#020617;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:15px;
+}
+
+input, select {
+    padding:8px;
+    margin:5px;
+    border:none;
+    border-radius:5px;
+}
+
+/* TABLE */
+table {
+    width:100%;
+    margin-top:10px;
+    border-collapse:collapse;
+}
+
+th {
+    background:#1e293b;
+}
+
+td, th {
+    padding:10px;
+    text-align:center;
+}
+
+tr:nth-child(even){
+    background:#020617;
+}
+
+button {
+    padding:5px 10px;
+    margin:2px;
+    border:none;
+    border-radius:5px;
+    cursor:pointer;
+}
+
+.delete { background:#ef4444; }
+</style>
+</head>
+
+<body>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+<h2>🏢 Portaria</h2>
+
+<div class="menu">
+<div>Dashboard</div>
+<div>Moradores</div>
+<div>Visitantes</div>
+<div>Entregas</div>
+</div>
+
+<button onclick="logout()">Sair</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+<div class="header">
+<h2>Dashboard</h2>
+<div class="user">👤 <span id="usuario"></span></div>
+</div>
+
+<!-- CARDS -->
+<div class="cards">
+<div class="card">
+<h3 id="totalMoradores"></h3>
+<p>Movimentações</p>
+</div>
+
+<div class="card">
+<h3 id="totalVisitantes"></h3>
+<p>Visitantes</p>
+</div>
+
+<div class="card">
+<h3 id="totalEntregas"></h3>
+<p>Entregas</p>
+</div>
+</div>
+
+<!-- BUSCA -->
+<input id="busca" placeholder="🔍 Buscar..." onkeyup="listar()">
+
+<!-- MORADORES -->
+<div class="form">
+<h3>Moradores</h3>
+<input id="morador">
+<select id="tipo">
+<option>Entrada</option>
+<option>Saída</option>
+</select>
+<button onclick="addMorador()">Salvar</button>
+
+<table>
+<thead><tr><th>Nome</th><th>Tipo</th><th>Hora</th><th></th></tr></thead>
+<tbody id="listaMoradores"></tbody>
+</table>
+</div>
+
+<!-- VISITANTES -->
+<div class="form">
+<h3>Visitantes</h3>
+<input id="visitante">
+<input id="destino">
+<button onclick="addVisitante()">Salvar</button>
+
+<table>
+<thead><tr><th>Nome</th><th>Destino</th><th>Hora</th><th></th></tr></thead>
+<tbody id="listaVisitantes"></tbody>
+</table>
+</div>
+
+<!-- ENTREGAS -->
+<div class="form">
+<h3>Entregas</h3>
+<input id="entregador">
+<input id="empresa">
+<button onclick="addEntrega()">Salvar</button>
+
+<table>
+<thead><tr><th>Nome</th><th>Empresa</th><th>Hora</th><th></th></tr></thead>
+<tbody id="listaEntregas"></tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+// 🔐 proteção
+if(!localStorage.getItem("logado")){
+    window.location.href="login.html";
+}
+
+document.getElementById("usuario").innerText = "Admin";
+
+let moradores = JSON.parse(localStorage.getItem("moradores")) || [];
+let visitantes = JSON.parse(localStorage.getItem("visitantes")) || [];
+let entregas = JSON.parse(localStorage.getItem("entregas")) || [];
+
+function hora(){
+    return new Date().toLocaleString();
+}
+
+function addMorador(){
+    moradores.push({
+        nome: morador.value,
+        tipo: tipo.value,
+        hora: hora()
+    });
+    salvar();
+}
+
+function addVisitante(){
+    visitantes.push({
+        nome: visitante.value,
+        destino: destino.value,
+        hora: hora()
+    });
+    salvar();
+}
+
+function addEntrega(){
+    entregas.push({
+        nome: entregador.value,
+        empresa: empresa.value,
+        hora: hora()
+    });
+    salvar();
+}
+
+function salvar(){
+    localStorage.setItem("moradores", JSON.stringify(moradores));
+    localStorage.setItem("visitantes", JSON.stringify(visitantes));
+    localStorage.setItem("entregas", JSON.stringify(entregas));
+    listar();
+}
+
+function listar(){
+    let busca = document.getElementById("busca").value.toLowerCase();
+
+    listaMoradores.innerHTML = moradores
+    .filter(m => m.nome.toLowerCase().includes(busca))
+    .map((m,i)=>`
+    <tr>
+    <td>${m.nome}</td>
+    <td>${m.tipo}</td>
+    <td>${m.hora}</td>
+    <td><button class="delete" onclick="delMorador(${i})">X</button></td>
+    </tr>`).join("");
+
+    listaVisitantes.innerHTML = visitantes
+    .filter(v => v.nome.toLowerCase().includes(busca))
+    .map((v,i)=>`
+    <tr>
+    <td>${v.nome}</td>
+    <td>${v.destino}</td>
+    <td>${v.hora}</td>
+    <td><button class="delete" onclick="delVisitante(${i})">X</button></td>
+    </tr>`).join("");
+
+    listaEntregas.innerHTML = entregas
+    .filter(e => e.nome.toLowerCase().includes(busca))
+    .map((e,i)=>`
+    <tr>
+    <td>${e.nome}</td>
+    <td>${e.empresa}</td>
+    <td>${e.hora}</td>
+    <td><button class="delete" onclick="delEntrega(${i})">X</button></td>
+    </tr>`).join("");
+
+    totalMoradores.innerText = moradores.length;
+    totalVisitantes.innerText = visitantes.length;
+    totalEntregas.innerText = entregas.length;
+}
+
+function delMorador(i){ moradores.splice(i,1); salvar(); }
+function delVisitante(i){ visitantes.splice(i,1); salvar(); }
+function delEntrega(i){ entregas.splice(i,1); salvar(); }
+
+function logout(){
+    localStorage.removeItem("logado");
+    window.location.href="login.html";
+}
+
+listar();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portaria - Login</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    height: 100vh;
+    display: flex;
+}
+
+/* LADO VISUAL */
+.left {
+    flex: 1;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    flex-direction: column;
+}
+
+.left h1 {
+    font-size: 32px;
+}
+
+.left p {
+    opacity: 0.8;
+}
+
+/* LADO LOGIN */
+.right {
+    flex: 1;
+    background: #0f172a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CARD */
+.card {
+    width: 320px;
+    padding: 40px;
+    background: #020617;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+    animation: fade 0.8s ease;
+}
+
+@keyframes fade {
+    from {opacity:0; transform: translateY(30px);}
+    to {opacity:1; transform: translateY(0);}
+}
+
+.card h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #22c55e;
+}
+
+/* INPUT */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 12px;
+    background: #0f172a;
+    border: none;
+    border-radius: 6px;
+    color: white;
+    outline: none;
+}
+
+.input-group input:focus {
+    border: 1px solid #22c55e;
+}
+
+/* BOTÃO */
+button {
+    width: 100%;
+    padding: 12px;
+    background: #22c55e;
+    border: none;
+    border-radius: 6px;
+    color: black;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #16a34a;
+}
+
+/* ERRO */
+.erro {
+    color: #ef4444;
+    margin-top: 10px;
+    text-align: center;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="left">
+    <h1>🏢 Portaria System</h1>
+    <p>Controle de acesso inteligente</p>
+</div>
+
+<div class="right">
+
+<div class="card">
+
+<h2>Entrar</h2>
+
+<div class="input-group">
+<input type="text" id="user" placeholder="Usuário">
+</div>
+
+<div class="input-group">
+<input type="password" id="senha" placeholder="Senha">
+</div>
+
+<button onclick="login()">Entrar</button>
+
+<p id="erro" class="erro"></p>
+
+</div>
+
+</div>
+
+<script>
+function login(){
+    let user = document.getElementById("user").value;
+    let senha = document.getElementById("senha").value;
+
+    // usuário padrão
+    if(user === "admin" && senha === "123"){
+        localStorage.setItem("logado", "true");
+
+        // 👇 AQUI FAZ ABRIR O DASHBOARD
+        window.location.href = "dashboard.html";
+
+    } else {
+        document.getElementById("erro").innerText = "Usuário ou senha inválidos";
+    }
+}
+</script>
+
+</body>
+</html>
